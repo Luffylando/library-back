@@ -9,13 +9,13 @@ exports.seed = function(knex, Promise) {
           title: "1984",
           author: "George Orwell",
           genre: "Beletrisctics",
-          image: "Orwell-1984"
+          image: "Orwell-1984.jpg"
         },
         {
           title: "The Republic",
           author: "Plato",
           genre: "Philosophy",
-          image: "Plato-Republic"
+          image: "Plato-Republic.jpg"
         }
       ]);
     });

@@ -2,6 +2,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const fileUpload = require("express-fileupload");
 
 class App {
   constructor(controllers, host, port) {
@@ -10,6 +11,7 @@ class App {
     this.port = port;
     this.controllers = controllers;
     this.app.use(bodyParser.json({ limit: "50mb", type: "application/json" }));
+    this.app.use(fileUpload());
 
     this.initializeMiddleware();
     this.initializeControllers();

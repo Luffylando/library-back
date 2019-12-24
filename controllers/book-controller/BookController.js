@@ -15,6 +15,7 @@ class BookController extends BaseController {
     this.router.get(this.path, this.getAllBooks);
     this.router.get(`${this.path}/:id`, this.getBookById);
     this.router.post(`${this.path}/add`, this.addBook);
+    this.router.post(`${this.path}/imgUpload`, this.imgUpload);
   }
 
   getRoutes() {
@@ -51,6 +52,40 @@ class BookController extends BaseController {
         ? this.badRequest(res, err)
         : this.internalServerError(res, err);
     }
+  };
+
+  imgUpload = async (req, res) => {
+    if (req.files === null) {
+      return res.status(400).json({ msg: "No file uploaded" });
+    }
+    const file = req.files.file;
+
+    let imageType = file.mimetype.split("/");
+    let imgType = "";
+
+    let imgName = file.name.substring(0, file.name.length - 4);
+    imageType[1] === "jpeg" ? (imgType = "jpg") : (imgType = imageType[1]);
+
+    let timeStampString = new Date().getTime();
+
+    let fullImageName = imgName + timeStampString + "." + imgType;
+
+    file.mv(
+      `/home/augusute/www/library/front/public/books/${fullImageName}`,
+      err => {
+        if (err) {
+          console.error(err);
+          return res.status(500).send(err);
+        }
+
+        res.json({
+          fileName: file.name,
+          fullName: fullImageName,
+          filePath: `/books/${file.name}`,
+          type: file.mimetype
+        });
+      }
+    );
   };
 }
 

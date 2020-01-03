@@ -6,6 +6,36 @@ const resetTemplate = require('./templates/resetTemplate');
 const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
 
 class Mailer {
+
+
+  async sendContactUsMessage(){
+
+    var smtpTransport = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+          user: "antonije25.01.1994@gmail.com",
+          pass: "ItachiUsui38"
+      }
+  });
+  
+    var mailOptions = {
+      from: "antonije25.01.1994@gmail.com",
+      to: "ogistdipen@outlook.com",
+      subject: 'What i ssubject?',
+      text: 'We really need that money boy...'
+  }
+    smtpTransport.sendMail(mailOptions, function(error, response){
+      if(error){
+          console.log(error);
+      }else{
+          res.redirect('/');
+      }
+  });
+}
+
+
+
+
   sendVerificationEmail(id, email, verificationToken) {
     return new Promise((resolve, reject) => {
       transporter.sendMail(

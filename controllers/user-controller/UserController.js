@@ -61,6 +61,7 @@ class UserController extends BaseController {
         lastName,
         dob,
         gender,
+        role = "guest",
         email,
         password
       );

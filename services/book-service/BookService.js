@@ -30,6 +30,41 @@ class BookService {
       book
     };
   }
+  async editBook(id, author, title, genre, image) {
+
+    const data = await Books.query()
+      .findById(id)
+      .patch({ author,title, genre, image });
+    data === 0 ? modelNotFoundError() : null;
+    return data;
+  }
+
+  async deleteBook(id){
+    const data = await Books.query()
+      .findById(id)
+      .del();
+    data === 0 ? modelNotFoundError() : null;
+    return data;
+  }
+
+  async searchBook(keyword, tag){
+    let data;
+    if(tag === "tag" && keyword === "keyword"){
+       data = await Books.query().where(`title`, 'like', `%%`)
+      .orWhere('author', 'like', `%%`)
+      .orWhere('genre', 'like', `%%`)
+    } else if(keyword !== "keyword" && tag === "tag"){
+      data = await Books.query().where(`title`, 'like', `%${keyword}%`)
+      .orWhere('author', 'like', `%${keyword}%`)
+      .orWhere('genre', 'like', `%${keyword}%`)
+    } else if(tag !== "tag" && keyword === "keyword") {
+      data = await Books.query().where(`${tag}`, 'like', `%%`)
+    } else {
+      data = await Books.query().where(`${tag}`, 'like', `%${keyword}%`);
+    }
+    data === 0 ? modelNotFoundError() : null;
+    return data;
+  }
 }
 
 module.exports = BookService;

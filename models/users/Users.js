@@ -13,7 +13,7 @@ class Users extends Model {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["firstName", "lastName", "email", "dob", "password", "gender"],
+      required: ["firstName", "lastName", "email", "dob", "password", "gender", "role"],
       properties: {
         id: { type: "integer" },
         firstName: { type: "string", minLength: 1, maxLength: 100 },
@@ -24,6 +24,10 @@ class Users extends Model {
         gender: {
           type: "string",
           enum: ["Male", "Female"]
+        },
+        role: {
+          type: "string",
+          enum: ["admin", "moderator", "user", "guest"]
         },
         joinDate: { type: "string", default: getMYSQLFormattedJoinDate() },
         endDate: { type: "string", default: getMYSQLFormattedEndDate() },

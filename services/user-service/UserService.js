@@ -20,6 +20,7 @@ class UserService {
     "dob",
     "email",
     "gender",
+    "role",
     "verified",
     "verificationToken",
     "resetToken",

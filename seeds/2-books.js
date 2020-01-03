@@ -8,7 +8,7 @@ exports.seed = function(knex, Promise) {
         {
           title: "1984",
           author: "George Orwell",
-          genre: "Beletrisctics",
+          genre: "Belatristics",
           image: "Orwell-1984.jpg"
         },
         {

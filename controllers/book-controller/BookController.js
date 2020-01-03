@@ -15,7 +15,12 @@ class BookController extends BaseController {
     this.router.get(this.path, this.getAllBooks);
     this.router.get(`${this.path}/:id`, this.getBookById);
     this.router.post(`${this.path}/add`, this.addBook);
+    this.router.put(`${this.path}/edit/:id`, this.editBook);
     this.router.post(`${this.path}/imgUpload`, this.imgUpload);
+    this.router.delete(`${this.path}/delete/:id`, this.deleteBook);
+    this.router.get(`${this.path}/search/:keyword/:tag`, this.searchBook);
+
+
   }
 
   getRoutes() {
@@ -59,19 +64,15 @@ class BookController extends BaseController {
       return res.status(400).json({ msg: "No file uploaded" });
     }
     const file = req.files.file;
-
     let imageType = file.mimetype.split("/");
     let imgType = "";
-
     let imgName = file.name.substring(0, file.name.length - 4);
     imageType[1] === "jpeg" ? (imgType = "jpg") : (imgType = imageType[1]);
 
     let timeStampString = new Date().getTime();
-
     let fullImageName = imgName + timeStampString + "." + imgType;
-
     file.mv(
-      `/home/augusute/www/library/front/public/books/${fullImageName}`,
+      `/home/luffy/www/library/front/public/books/${fullImageName}`,
       err => {
         if (err) {
           console.error(err);
@@ -87,6 +88,53 @@ class BookController extends BaseController {
       }
     );
   };
+
+  editBook = async(req,res) => {
+
+    try {
+      const id = req.params.id;
+      const { author, title, genre, image } = req.body;
+      const data = await this.bookService.editBook(
+        id,
+        author,
+        title,
+        genre,
+        image
+      );
+      this.ok(res, { updated: data });
+    } catch (err) {
+      err.name === "ModelNotFound"
+        ? this.notFound(res)
+        : this.internalServerError(res, err);
+    }
+  }
+
+  deleteBook = async (req,res) => {
+    try {
+      const id = req.params.id;
+      const data = await this.bookService.deleteBook(id);
+      this.ok(res, { delete: data });
+    } catch (err) {
+      err.name === "ModelNotFound"
+        ? this.notFound(res)
+        : this.internalServerError(res, err);
+    }
+    }
+
+    searchBook = async (req,res) => {
+      try {
+        const keyword = req.params.keyword;
+        const tag = req.params.tag;
+
+        const data = await this.bookService.searchBook(keyword,tag);
+        this.ok(res, {search: data});
+
+      }catch(err){
+        err.name === "ModelNotFound"
+        ? this.notFound(res)
+        : this.internalServerError(res, err);
+      }
+    }
 }
 
 module.exports = BookController;

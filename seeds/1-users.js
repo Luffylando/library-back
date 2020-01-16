@@ -12,7 +12,8 @@ exports.seed = function(knex, Promise) {
           gender: "Male",
           role: "admin",
           email: "admin@test.rs",
-          password: "password",
+          password:
+            "$2b$10$6FEhCwN.qXEzLB1VCEHJoe4TSeT0h4Kzt3VsTnGPcMmIkQcE/rZW2",
           joinDate: "2019-07-09",
           endDate: "2119-07-09",
           verified: 1,
@@ -26,7 +27,8 @@ exports.seed = function(knex, Promise) {
           gender: "Male",
           role: "moderator",
           email: "moderator@test.rs",
-          password: "password",
+          password:
+            "$2b$10$6FEhCwN.qXEzLB1VCEHJoe4TSeT0h4Kzt3VsTnGPcMmIkQcE/rZW2",
           joinDate: "2019-07-09",
           endDate: "2020-07-09",
           verified: 1,
@@ -40,7 +42,8 @@ exports.seed = function(knex, Promise) {
           gender: "Female",
           role: "user",
           email: "user@test.rs",
-          password: "password",
+          password:
+            "$2b$10$6FEhCwN.qXEzLB1VCEHJoe4TSeT0h4Kzt3VsTnGPcMmIkQcE/rZW2",
           joinDate: "2019-07-09",
           endDate: "2020-07-09",
           verified: 1,
@@ -54,7 +57,8 @@ exports.seed = function(knex, Promise) {
           gender: "Male",
           role: "guest",
           email: "guest@test.rs",
-          password: "password",
+          password:
+            "$2b$10$6FEhCwN.qXEzLB1VCEHJoe4TSeT0h4Kzt3VsTnGPcMmIkQcE/rZW2",
           joinDate: "2019-07-09",
           endDate: "2020-07-09",
           verified: 1,

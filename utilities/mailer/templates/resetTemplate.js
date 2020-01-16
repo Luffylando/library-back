@@ -2,8 +2,8 @@ const resetTemplate = (from, to, url, id, resetToken) => {
   return {
     from,
     to,
-    subject: 'HBC reset lozinke.',
-    html: `<p>Da biste resetovali vašu lozinku HBC molimo <a href="${url}/members/reset-password/${id}/${resetToken}">kliknite ovde</a>.</p>`
+    subject: "Luffy's library password reset.",
+    html: `<p>To restart your password please <a href="${url}/members/reset-password/${id}/${resetToken}">click here</a>.</p>`
   };
 };
 

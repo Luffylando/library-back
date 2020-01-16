@@ -18,7 +18,7 @@ class UserController extends BaseController {
     this.router.post(`${this.path}/login`, this.login);
     this.router.post(`${this.path}/logout`, this.logout);
     this.router.put(`${this.path}/edit/:id`, this.updateUser);
-    this.router.get(`${this.path}/verify/:id/:verificationToken`, this.verify);
+    this.router.put(`${this.path}/verify/:id/:verificationToken`, this.verify);
     this.router.post(
       `${this.path}/request-password-reset`,
       this.requestPasswordReset
@@ -61,7 +61,6 @@ class UserController extends BaseController {
         lastName,
         dob,
         gender,
-        role = "guest",
         email,
         password
       );
@@ -100,8 +99,6 @@ class UserController extends BaseController {
       this.okWithCookie(res, data, "token", data.token, {
         httpOnly: true
       });
-
-      console.log("data", data);
     } catch (err) {
       console.log(err);
       err.name === "ModelNotFound"
@@ -175,6 +172,8 @@ class UserController extends BaseController {
         oldPassword,
         newPassword
       );
+
+      console.log("data", data);
       this.ok(res, data);
     } catch (err) {
       err.name === "ModelNotFound"

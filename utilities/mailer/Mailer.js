@@ -1,46 +1,42 @@
-const nodemailer = require('nodemailer');
-const mailConfig = require('./config/auth');
+const nodemailer = require("nodemailer");
+const mailConfig = require("./config/auth");
 const transporter = nodemailer.createTransport(mailConfig);
-const verificationTemplate = require('./templates/verificationTemplate');
-const resetTemplate = require('./templates/resetTemplate');
-const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
+const verificationTemplate = require("./templates/verificationTemplate");
+const resetTemplate = require("./templates/resetTemplate");
+const clientUrl = process.env.CLIENT_URL || "http://localhost:3000";
 
 class Mailer {
-
-
-  async sendContactUsMessage(){
+  async sendContactUsMessage(data) {
+    console.log("mailer", data);
 
     var smtpTransport = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-          user: "antonije25.01.1994@gmail.com",
-          pass: "ItachiUsui38"
+        user: "antonije25.01.1994@gmail.com",
+        pass: "ItachiUsui38"
       }
-  });
-  
+    });
+
     var mailOptions = {
       from: "antonije25.01.1994@gmail.com",
-      to: "ogistdipen@outlook.com",
-      subject: 'What i ssubject?',
-      text: 'We really need that money boy...'
-  }
-    smtpTransport.sendMail(mailOptions, function(error, response){
-      if(error){
-          console.log(error);
-      }else{
-          res.redirect('/');
+      to: data.to,
+      subject: data.subject,
+      text: data.text
+    };
+    smtpTransport.sendMail(mailOptions, function(error, response) {
+      if (error) {
+        console.log(error);
+      } else {
+        res.redirect("/");
       }
-  });
-}
-
-
-
+    });
+  }
 
   sendVerificationEmail(id, email, verificationToken) {
     return new Promise((resolve, reject) => {
       transporter.sendMail(
         verificationTemplate(
-          mailConfig.auth.user,
+          "antonije25.01.1994@gmail.com",
           email,
           clientUrl,
           id,
@@ -50,8 +46,12 @@ class Mailer {
           err
             ? reject(err)
             : resolve({
-                message: 'Verification email sent.',
-                messageId: info.messageId
+                message: "Verification email sent.",
+                messageId: info.messageId,
+                email: email,
+                clientUrl: clientUrl,
+                id: id,
+                verificationToken: verificationToken
               });
         }
       );
@@ -65,7 +65,7 @@ class Mailer {
           err
             ? reject(err)
             : resolve({
-                message: 'Reset email sent.',
+                message: "Reset email sent.",
                 messageId: info.messageId
               });
         }

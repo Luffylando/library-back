@@ -12,7 +12,7 @@ class ContactService {
     return await Contacts.query().select(...this.fields);
   }
 
-  async getContactMessageById(id) {
+  async getMessageById(id) {
     const data = await Contacts.query()
       .select(...this.fields)
       .findById(id);
@@ -38,14 +38,14 @@ class ContactService {
   }
 
   async sendContactMessage(data) {
-    const mail = await mailer.sendContactUsMessage(
-    //   {
 
-    //   firstName: data.firstName,
-    //   lastName: data.lastName,
-    //   email: data.email,
-    //   message: data.message
-    // }
+    const mail = await mailer.sendContactUsMessage(
+      {
+
+      to: data.mailerTo,
+      subject: data.mailerSubject,
+      text: data.mailerText,
+    }
   
     );
     return {

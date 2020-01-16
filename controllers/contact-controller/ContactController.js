@@ -12,15 +12,34 @@ class ContactController extends BaseController {
   }
 
   initializeRoutes() {
+    this.router.get(`${this.path}`, this.getAllContactMessages);
+    this.router.get(`${this.path}/:id`, this.getMessageById);
     this.router.post(`${this.path}/email`, this.sendContactMessage);
     this.router.post(`${this.path}/formMessage`, this.sendFormMessage);
-
-
 
   }
 
   getRoutes() {
     return extractRouterRoutes(this.router);
+  }
+
+  getAllContactMessages = async(req, res) => {
+    try {
+      return this.ok(res, await this.contactService.getAllContactMessages());
+    } catch (err) {
+      this.internalServerError(res, err);
+    }
+  }
+
+  getMessageById = async(req,res) => {
+    try {
+      const id = req.params.id;
+      return this.ok(res, await this.contactService.getMessageById(id));
+    } catch (err) {
+      err.name === "ModelNotFound"
+        ? this.notFound(res)
+        : this.internalServerError(res, err);
+    }
   }
 
   sendFormMessage = async (req, res) => {
@@ -40,7 +59,12 @@ class ContactController extends BaseController {
 
   sendContactMessage = async (req,res) => {
     try {
-      const data = await this.contactService.sendContactMessage();
+      const { mailerTo, mailerSubject, mailerText } = req.body;
+
+      let dataFromBody = { mailerTo, mailerSubject, mailerText };
+
+      const data = await this.contactService.sendContactMessage(dataFromBody);
+      
       this.ok(res, { contactMessageData: data});
 
     }catch(err){

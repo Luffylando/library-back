@@ -22,16 +22,12 @@ class UserService {
     "gender",
     "role",
     "verified",
+    "password",
     "verificationToken",
     "resetToken",
     "joinDate",
     "endDate"
   ];
-
-  //   eagerFileds = {
-  //     company: ['id', 'name', 'email'],
-  //     cards: ['id', 'number', 'expMonth', 'expYear']
-  //   };
 
   async getAllUsers() {
     return await Users.query().select(...this.fields);
@@ -62,6 +58,7 @@ class UserService {
       dob,
       gender,
       email,
+      role: "guest",
       password: hashedPassword
     });
 
@@ -92,17 +89,20 @@ class UserService {
   async login(email, password) {
     const user = await this.getUserByEmail(email);
 
+    console.log("iser", user);
+
     user[0] === undefined ? modelNotFoundError() : null;
     user[0].verified === 0 ? unverifiedError() : null;
-    // if (!(await compareHashes(password, user[0].password))) {
-    //   unauthorizedError();
-    // }
+    if (!(await compareHashes(password, user[0].password))) {
+      unauthorizedError();
+    }
     jwt.setPayload({
       id: user[0].id,
       firstName: user[0].firstName,
       lastName: user[0].lastName,
       dob: user[0].dob,
       email: user[0].email,
+      role: user[0].role,
       verified: user[0].verified,
       joinDate: user[0].joinDate,
       endDate: user[0].endDate,
@@ -113,6 +113,7 @@ class UserService {
     return {
       token: jwt.signToken(),
       userId: user[0].id,
+      userRole: user[0].role,
       userFirstName: user[0].firstName,
       userLastName: user[0].lastName
     };
@@ -160,12 +161,19 @@ class UserService {
 
   async changePassword(id, oldPassword, newPassword) {
     const existingUser = await this.getUserById(id);
+    console.log("testing123");
+
+    console.log("oldPassword", oldPassword);
+    console.log("euP", existingUser.password);
+
     if (!(await compareHashes(oldPassword, existingUser.password))) {
       unauthorizedError();
     }
+
+    console.log("proslo");
     const hashedPassword = await hasher(newPassword);
     return {
-      passwordChanged: await query()
+      passwordChanged: await Users.query()
         .findById(id)
         .patch({ password: hashedPassword })
     };

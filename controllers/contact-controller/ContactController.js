@@ -16,22 +16,25 @@ class ContactController extends BaseController {
     this.router.get(`${this.path}/:id`, this.getMessageById);
     this.router.post(`${this.path}/email`, this.sendContactMessage);
     this.router.post(`${this.path}/formMessage`, this.sendFormMessage);
-
+    this.router.get(
+      `${this.path}/messages/:paginationNumber`,
+      this.getPaginatedMessages
+    );
   }
 
   getRoutes() {
     return extractRouterRoutes(this.router);
   }
 
-  getAllContactMessages = async(req, res) => {
+  getAllContactMessages = async (req, res) => {
     try {
       return this.ok(res, await this.contactService.getAllContactMessages());
     } catch (err) {
       this.internalServerError(res, err);
     }
-  }
+  };
 
-  getMessageById = async(req,res) => {
+  getMessageById = async (req, res) => {
     try {
       const id = req.params.id;
       return this.ok(res, await this.contactService.getMessageById(id));
@@ -40,10 +43,23 @@ class ContactController extends BaseController {
         ? this.notFound(res)
         : this.internalServerError(res, err);
     }
-  }
+  };
+
+  getPaginatedMessages = async (req, res) => {
+    try {
+      const paginationNumber = req.params.paginationNumber;
+      return this.ok(
+        res,
+        await this.contactService.getPaginatedMessages(paginationNumber)
+      );
+    } catch (err) {
+      err.name === "ModelNotFound"
+        ? this.notFound(res)
+        : this.internalServerError(res, err);
+    }
+  };
 
   sendFormMessage = async (req, res) => {
-
     try {
       const { firstName, lastName, email, message } = req.body;
       let dataFromBody = { firstName, lastName, email, message };
@@ -54,25 +70,23 @@ class ContactController extends BaseController {
         ? this.badRequest(res, err)
         : this.internalServerError(res, err);
     }
-  }
+  };
 
-
-  sendContactMessage = async (req,res) => {
+  sendContactMessage = async (req, res) => {
     try {
       const { mailerTo, mailerSubject, mailerText } = req.body;
 
       let dataFromBody = { mailerTo, mailerSubject, mailerText };
 
       const data = await this.contactService.sendContactMessage(dataFromBody);
-      
-      this.ok(res, { contactMessageData: data});
 
-    }catch(err){
+      this.ok(res, { contactMessageData: data });
+    } catch (err) {
       err.name === "ModelNotFound"
-      ? this.notFound(res)
-      : this.internalServerError(res, err);
+        ? this.notFound(res)
+        : this.internalServerError(res, err);
     }
-  }
+  };
 }
 
 module.exports = ContactController;

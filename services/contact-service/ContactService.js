@@ -20,14 +20,16 @@ class ContactService {
     return data;
   }
 
-  async getPaginatedMessages(paginationNumber = 1) {
+  async getPaginatedMessages(paginationNumber = 1, itemsPerPage) {
     let offset;
 
-    paginationNumber < 2 ? (offset = 0) : (offset = (paginationNumber - 1) * 5);
+    paginationNumber < 2
+      ? (offset = 0)
+      : (offset = (paginationNumber - 1) * itemsPerPage);
     return await Contacts.query()
       .select(...this.fields)
       .from("contacts")
-      .limit(5)
+      .limit(itemsPerPage)
       .offset(offset)
       .orderBy("id", "desc");
   }

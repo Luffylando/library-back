@@ -17,7 +17,7 @@ class ContactController extends BaseController {
     this.router.post(`${this.path}/email`, this.sendContactMessage);
     this.router.post(`${this.path}/formMessage`, this.sendFormMessage);
     this.router.get(
-      `${this.path}/messages/:paginationNumber`,
+      `${this.path}/messages/:paginationNumber/:itemsPerPage`,
       this.getPaginatedMessages
     );
   }
@@ -48,9 +48,14 @@ class ContactController extends BaseController {
   getPaginatedMessages = async (req, res) => {
     try {
       const paginationNumber = req.params.paginationNumber;
+      const itemsPerPage = req.params.itemsPerPage;
+
       return this.ok(
         res,
-        await this.contactService.getPaginatedMessages(paginationNumber)
+        await this.contactService.getPaginatedMessages(
+          paginationNumber,
+          itemsPerPage
+        )
       );
     } catch (err) {
       err.name === "ModelNotFound"

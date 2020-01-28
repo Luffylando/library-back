@@ -13,6 +13,9 @@ class Books extends Model {
         id: { type: "integer" },
         title: { type: "string", minLength: 2, maxLength: 100 },
         author: { type: "string", minLength: 2, maxLength: 100 },
+        quote: { type: "string", minLength: 2, maxLength: 100 },
+        status: { type: "boolean", default: true },
+        borrowCount: { type: "integer", default: 0 },
         image: { type: "string", minLength: 5 },
         genre: {
           type: "string",

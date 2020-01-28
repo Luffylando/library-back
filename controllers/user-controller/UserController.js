@@ -17,6 +17,7 @@ class UserController extends BaseController {
     this.router.post(this.path, this.createUser);
     this.router.post(`${this.path}/login`, this.login);
     this.router.post(`${this.path}/logout`, this.logout);
+    this.router.post(`${this.path}/imgUpload`, this.imgUpload);
     this.router.put(`${this.path}/edit/:id`, this.updateUser);
     this.router.put(`${this.path}/verify/:id/:verificationToken`, this.verify);
     this.router.post(
@@ -75,14 +76,15 @@ class UserController extends BaseController {
   updateUser = async (req, res) => {
     try {
       const id = req.params.id;
-      const { firstName, lastName, dob, gender, email } = req.body;
+      const { firstName, lastName, dob, gender, email, image } = req.body;
       const data = await this.userService.updateUser(
         id,
         firstName,
         lastName,
         dob,
         gender,
-        email
+        email,
+        image
       );
       this.ok(res, { updated: data });
     } catch (err) {
@@ -162,6 +164,36 @@ class UserController extends BaseController {
         ? this.forbidden(res, err)
         : this.internalServerError(res, err);
     }
+  };
+
+  imgUpload = async (req, res) => {
+    if (req.files === null) {
+      return res.status(400).json({ msg: "No file uploaded" });
+    }
+    const file = req.files.file;
+    let imageType = file.mimetype.split("/");
+    let imgType = "";
+    let imgName = file.name.substring(0, file.name.length - 4);
+    imageType[1] === "jpeg" ? (imgType = "jpg") : (imgType = imageType[1]);
+
+    let timeStampString = new Date().getTime();
+    let fullImageName = imgName + timeStampString + "." + imgType;
+    file.mv(
+      `/home/luffy/www/library/front/public/team/${fullImageName}`,
+      err => {
+        if (err) {
+          console.error(err);
+          return res.status(500).send(err);
+        }
+
+        res.json({
+          fileName: file.name,
+          fullName: fullImageName,
+          filePath: `/team/${file.name}`,
+          type: file.mimetype
+        });
+      }
+    );
   };
 
   changePassword = async (req, res) => {

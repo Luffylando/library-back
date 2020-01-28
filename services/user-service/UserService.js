@@ -21,6 +21,7 @@ class UserService {
     "email",
     "gender",
     "role",
+    "image",
     "verified",
     "password",
     "verificationToken",
@@ -74,22 +75,20 @@ class UserService {
     };
   }
 
-  async updateUser(id, firstName, lastName, dob, gender, email) {
+  async updateUser(id, firstName, lastName, dob, gender, email, image) {
     emailValidator(email);
     const existingUser = await this.getUserByEmail(email);
     // existingMember[0] !== undefined ? emailNotUnique() : null;
 
     const data = await Users.query()
       .findById(id)
-      .patch({ firstName, lastName, dob, gender, email });
+      .patch({ firstName, lastName, dob, gender, email, image });
     data === 0 ? modelNotFoundError() : null;
     return data;
   }
 
   async login(email, password) {
     const user = await this.getUserByEmail(email);
-
-    console.log("iser", user);
 
     user[0] === undefined ? modelNotFoundError() : null;
     user[0].verified === 0 ? unverifiedError() : null;
@@ -161,16 +160,11 @@ class UserService {
 
   async changePassword(id, oldPassword, newPassword) {
     const existingUser = await this.getUserById(id);
-    console.log("testing123");
-
-    console.log("oldPassword", oldPassword);
-    console.log("euP", existingUser.password);
 
     if (!(await compareHashes(oldPassword, existingUser.password))) {
       unauthorizedError();
     }
 
-    console.log("proslo");
     const hashedPassword = await hasher(newPassword);
     return {
       passwordChanged: await Users.query()

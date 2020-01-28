@@ -5,7 +5,16 @@ const unverifiedError = require("../../utilities/validation/unverified/unverifie
 const invalidTokenError = require("../../utilities/validation/invalid-token/invalid-token");
 
 class BookService {
-  fields = ["id", "title", "author", "genre", "image"];
+  fields = [
+    "id",
+    "title",
+    "author",
+    "genre",
+    "quote",
+    "status",
+    "borrowCount",
+    "image"
+  ];
 
   async getAllBooks() {
     return await Books.query().select(...this.fields);
@@ -24,22 +33,22 @@ class BookService {
       author: data.author,
       title: data.title,
       genre: data.genre,
+      quote: data.quote,
       image: data.image
     });
     return {
       book
     };
   }
-  async editBook(id, author, title, genre, image) {
-
+  async editBook(id, author, title, genre, quote, image) {
     const data = await Books.query()
       .findById(id)
-      .patch({ author,title, genre, image });
+      .patch({ author, title, genre, image, quote });
     data === 0 ? modelNotFoundError() : null;
     return data;
   }
 
-  async deleteBook(id){
+  async deleteBook(id) {
     const data = await Books.query()
       .findById(id)
       .del();
@@ -47,20 +56,22 @@ class BookService {
     return data;
   }
 
-  async searchBook(keyword, tag){
+  async searchBook(keyword, tag) {
     let data;
-    if(tag === "tag" && keyword === "keyword"){
-       data = await Books.query().where(`title`, 'like', `%%`)
-      .orWhere('author', 'like', `%%`)
-      .orWhere('genre', 'like', `%%`)
-    } else if(keyword !== "keyword" && tag === "tag"){
-      data = await Books.query().where(`title`, 'like', `%${keyword}%`)
-      .orWhere('author', 'like', `%${keyword}%`)
-      .orWhere('genre', 'like', `%${keyword}%`)
-    } else if(tag !== "tag" && keyword === "keyword") {
-      data = await Books.query().where(`${tag}`, 'like', `%%`)
+    if (tag === "tag" && keyword === "keyword") {
+      data = await Books.query()
+        .where(`title`, "like", `%%`)
+        .orWhere("author", "like", `%%`)
+        .orWhere("genre", "like", `%%`);
+    } else if (keyword !== "keyword" && tag === "tag") {
+      data = await Books.query()
+        .where(`title`, "like", `%${keyword}%`)
+        .orWhere("author", "like", `%${keyword}%`)
+        .orWhere("genre", "like", `%${keyword}%`);
+    } else if (tag !== "tag" && keyword === "keyword") {
+      data = await Books.query().where(`${tag}`, "like", `%%`);
     } else {
-      data = await Books.query().where(`${tag}`, 'like', `%${keyword}%`);
+      data = await Books.query().where(`${tag}`, "like", `%${keyword}%`);
     }
     data === 0 ? modelNotFoundError() : null;
     return data;

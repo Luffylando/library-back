@@ -11,6 +11,7 @@ exports.seed = function(knex, Promise) {
           dob: "1970-01-01",
           gender: "Male",
           role: "admin",
+          image: "Gadamer.jpg",
           email: "admin@test.rs",
           password:
             "$2b$10$6FEhCwN.qXEzLB1VCEHJoe4TSeT0h4Kzt3VsTnGPcMmIkQcE/rZW2",
@@ -27,6 +28,7 @@ exports.seed = function(knex, Promise) {
           gender: "Male",
           role: "moderator",
           email: "moderator@test.rs",
+          image: "Gedel.jpg",
           password:
             "$2b$10$6FEhCwN.qXEzLB1VCEHJoe4TSeT0h4Kzt3VsTnGPcMmIkQcE/rZW2",
           joinDate: "2019-07-09",
@@ -41,6 +43,7 @@ exports.seed = function(knex, Promise) {
           dob: "1970-01-01",
           gender: "Female",
           role: "user",
+          image: "Quine.jpg",
           email: "user@test.rs",
           password:
             "$2b$10$6FEhCwN.qXEzLB1VCEHJoe4TSeT0h4Kzt3VsTnGPcMmIkQcE/rZW2",
@@ -57,6 +60,7 @@ exports.seed = function(knex, Promise) {
           gender: "Male",
           role: "guest",
           email: "guest@test.rs",
+          image: "Rawls.jpg",
           password:
             "$2b$10$6FEhCwN.qXEzLB1VCEHJoe4TSeT0h4Kzt3VsTnGPcMmIkQcE/rZW2",
           joinDate: "2019-07-09",

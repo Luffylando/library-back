@@ -16,9 +16,22 @@ class ContactController extends BaseController {
     this.router.get(`${this.path}/:id`, this.getMessageById);
     this.router.post(`${this.path}/email`, this.sendContactMessage);
     this.router.post(`${this.path}/formMessage`, this.sendFormMessage);
+    this.router.put(
+      `${this.path}/message/update/:id`,
+      this.updateContactMessage
+    );
+
     this.router.get(
       `${this.path}/messages/:paginationNumber/:itemsPerPage`,
       this.getPaginatedMessages
+    );
+    this.router.get(
+      `${this.path}/messages/answered`,
+      this.getAllAnsweredMessages
+    );
+    this.router.get(
+      `${this.path}/messages/answered/:paginationNumber/:itemsPerPage`,
+      this.getAllAnsweredMessagesPaginated
     );
   }
 
@@ -86,6 +99,52 @@ class ContactController extends BaseController {
       const data = await this.contactService.sendContactMessage(dataFromBody);
 
       this.ok(res, { contactMessageData: data });
+    } catch (err) {
+      err.name === "ModelNotFound"
+        ? this.notFound(res)
+        : this.internalServerError(res, err);
+    }
+  };
+
+  updateContactMessage = async (req, res) => {
+    try {
+      const { answered, archived } = req.body;
+      const id = req.params.id;
+
+      let dataFromBody = { id, answered, archived };
+
+      const data = await this.contactService.updateContactMessage(dataFromBody);
+
+      this.ok(res, { updateContactMessage: data });
+    } catch (err) {
+      err.name === "ModelNotFound"
+        ? this.notFound(res)
+        : this.internalServerError(res, err);
+    }
+  };
+
+  getAllAnsweredMessages = async (req, res) => {
+    try {
+      return this.ok(res, await this.contactService.getAllAnsweredMessages());
+    } catch (err) {
+      err.name === "ModelNotFound"
+        ? this.notFound(res)
+        : this.internalServerError(res, err);
+    }
+  };
+
+  getAllAnsweredMessagesPaginated = async (req, res) => {
+    try {
+      const paginationNumber = req.params.paginationNumber;
+      const itemsPerPage = req.params.itemsPerPage;
+
+      return this.ok(
+        res,
+        await this.contactService.getAllAnsweredMessagesPaginated(
+          paginationNumber,
+          itemsPerPage
+        )
+      );
     } catch (err) {
       err.name === "ModelNotFound"
         ? this.notFound(res)

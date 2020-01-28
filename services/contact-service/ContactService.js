@@ -6,7 +6,15 @@ const invalidTokenError = require("../../utilities/validation/invalid-token/inva
 const mailer = require("../../utilities/mailer/Mailer");
 
 class ContactService {
-  fields = ["id", "firstName", "lastName", "email", "message"];
+  fields = [
+    "id",
+    "firstName",
+    "lastName",
+    "email",
+    "message",
+    "answered",
+    "archived"
+  ];
 
   async getAllContactMessages() {
     return await Contacts.query().select(...this.fields);
@@ -18,20 +26,6 @@ class ContactService {
       .findById(id);
     data === undefined ? modelNotFoundError() : null;
     return data;
-  }
-
-  async getPaginatedMessages(paginationNumber = 1, itemsPerPage) {
-    let offset;
-
-    paginationNumber < 2
-      ? (offset = 0)
-      : (offset = (paginationNumber - 1) * itemsPerPage);
-    return await Contacts.query()
-      .select(...this.fields)
-      .from("contacts")
-      .limit(itemsPerPage)
-      .offset(offset)
-      .orderBy("id", "desc");
   }
 
   async sendFormMessage(data) {
@@ -61,6 +55,54 @@ class ContactService {
     return {
       mail
     };
+  }
+
+  async updateContactMessage(data) {
+    let id = data.id;
+    let answered = data.answered;
+    let archived = data.archived;
+    const update = await Contacts.query()
+      .findById(id)
+      .patch({ answered, archived });
+    update === 0 ? modelNotFoundError() : null;
+    return update;
+  }
+
+  async getPaginatedMessages(paginationNumber = 1, itemsPerPage) {
+    let offset;
+
+    paginationNumber < 2
+      ? (offset = 0)
+      : (offset = (paginationNumber - 1) * itemsPerPage);
+    return await Contacts.query()
+      .select(...this.fields)
+      .from("contacts")
+      .limit(itemsPerPage)
+      .offset(offset)
+      .orderBy("id", "desc");
+  }
+
+  async getAllAnsweredMessages() {
+    return await Contacts.query()
+      .select(...this.fields)
+      .where({ answered: true });
+  }
+
+  async getAllAnsweredMessagesPaginated(paginationNumber = 1, itemsPerPage) {
+    let offset;
+
+    paginationNumber < 2
+      ? (offset = 0)
+      : (offset = (paginationNumber - 1) * itemsPerPage);
+    return await Contacts.query()
+      .select(...this.fields)
+      .from("contacts")
+      .limit(itemsPerPage)
+      .offset(offset)
+      .orderBy("id")
+      .where({
+        answered: true
+      });
   }
 }
 

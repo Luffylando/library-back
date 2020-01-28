@@ -19,8 +19,6 @@ class BookController extends BaseController {
     this.router.post(`${this.path}/imgUpload`, this.imgUpload);
     this.router.delete(`${this.path}/delete/:id`, this.deleteBook);
     this.router.get(`${this.path}/search/:keyword/:tag`, this.searchBook);
-
-
   }
 
   getRoutes() {
@@ -49,7 +47,7 @@ class BookController extends BaseController {
   addBook = async (req, res) => {
     try {
       const { author, title, genre, image } = req.body;
-      let dataFromBody = { author, title, genre, image };
+      let dataFromBody = { author, title, genre, quote, image };
       const data = await this.bookService.addBook(dataFromBody);
       this.created(res, data);
     } catch (err) {
@@ -89,16 +87,16 @@ class BookController extends BaseController {
     );
   };
 
-  editBook = async(req,res) => {
-
+  editBook = async (req, res) => {
     try {
       const id = req.params.id;
-      const { author, title, genre, image } = req.body;
+      const { author, title, genre, quote, image } = req.body;
       const data = await this.bookService.editBook(
         id,
         author,
         title,
         genre,
+        quote,
         image
       );
       this.ok(res, { updated: data });
@@ -107,9 +105,9 @@ class BookController extends BaseController {
         ? this.notFound(res)
         : this.internalServerError(res, err);
     }
-  }
+  };
 
-  deleteBook = async (req,res) => {
+  deleteBook = async (req, res) => {
     try {
       const id = req.params.id;
       const data = await this.bookService.deleteBook(id);
@@ -119,22 +117,21 @@ class BookController extends BaseController {
         ? this.notFound(res)
         : this.internalServerError(res, err);
     }
-    }
+  };
 
-    searchBook = async (req,res) => {
-      try {
-        const keyword = req.params.keyword;
-        const tag = req.params.tag;
+  searchBook = async (req, res) => {
+    try {
+      const keyword = req.params.keyword;
+      const tag = req.params.tag;
 
-        const data = await this.bookService.searchBook(keyword,tag);
-        this.ok(res, {search: data});
-
-      }catch(err){
-        err.name === "ModelNotFound"
+      const data = await this.bookService.searchBook(keyword, tag);
+      this.ok(res, { search: data });
+    } catch (err) {
+      err.name === "ModelNotFound"
         ? this.notFound(res)
         : this.internalServerError(res, err);
-      }
     }
+  };
 }
 
 module.exports = BookController;

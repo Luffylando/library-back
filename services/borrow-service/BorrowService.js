@@ -39,6 +39,15 @@ class BorrowService {
     data === 0 ? modelNotFoundError() : null;
     return data;
   }
+
+  async checkIfUserAlreadyBorrowed(book_id, user_id) {
+    const data = await Borrow.query()
+      .count()
+      .where({ book_id: book_id })
+      .andWhere({ user_id: user_id });
+    data === 0 ? modelNotFoundError() : null;
+    return Object.values(data[0]);
+  }
 }
 
 module.exports = BorrowService;

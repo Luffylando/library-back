@@ -16,6 +16,10 @@ class BorrowController extends BaseController {
     this.router.get(`${this.path}/:id`, this.getBorrowById);
     this.router.post(`${this.path}/add`, this.borrowRequest);
     this.router.put(`${this.path}/update/:id`, this.updateBorrow);
+    this.router.get(
+      `${this.path}/check/:book_id/:user_id`,
+      this.checkIfUserAlreadyBorrowed
+    );
   }
 
   getRoutes() {
@@ -60,6 +64,21 @@ class BorrowController extends BaseController {
       const { status } = req.body;
       const data = await this.borrowService.updateBorrow(id, status);
       this.ok(res, { updated: data });
+    } catch (err) {
+      err.name === "ModelNotFound"
+        ? this.notFound(res)
+        : this.internalServerError(res, err);
+    }
+  };
+  checkIfUserAlreadyBorrowed = async (req, res) => {
+    try {
+      let book_id = req.params.book_id;
+      let user_id = req.params.user_id;
+      const data = await this.borrowService.checkIfUserAlreadyBorrowed(
+        book_id,
+        user_id
+      );
+      this.ok(res, { CheckIfExists: data });
     } catch (err) {
       err.name === "ModelNotFound"
         ? this.notFound(res)

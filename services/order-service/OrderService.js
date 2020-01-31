@@ -39,6 +39,15 @@ class OrderService {
     data === 0 ? modelNotFoundError() : null;
     return data;
   }
+
+  async checkIfUserAlreadyBought(book_id, user_id) {
+    const data = await Order.query()
+      .count()
+      .where({ book_id: book_id })
+      .andWhere({ user_id: user_id });
+    data === 0 ? modelNotFoundError() : null;
+    return Object.values(data[0]);
+  }
 }
 
 module.exports = OrderService;

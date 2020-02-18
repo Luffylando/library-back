@@ -33,6 +33,14 @@ class ContactController extends BaseController {
       `${this.path}/messages/answered/:paginationNumber/:itemsPerPage`,
       this.getAllAnsweredMessagesPaginated
     );
+    this.router.get(
+      `${this.path}/messages/archived`,
+      this.getAllArchivedMessages
+    );
+    this.router.get(
+      `${this.path}/messages/archived/:paginationNumber/:itemsPerPage`,
+      this.getAllArchivedMessagesPaginated
+    );
   }
 
   getRoutes() {
@@ -141,6 +149,35 @@ class ContactController extends BaseController {
       return this.ok(
         res,
         await this.contactService.getAllAnsweredMessagesPaginated(
+          paginationNumber,
+          itemsPerPage
+        )
+      );
+    } catch (err) {
+      err.name === "ModelNotFound"
+        ? this.notFound(res)
+        : this.internalServerError(res, err);
+    }
+  };
+
+  getAllArchivedMessages = async (req, res) => {
+    try {
+      return this.ok(res, await this.contactService.getAllArchivedMessages());
+    } catch (err) {
+      err.name === "ModelNotFound"
+        ? this.notFound(res)
+        : this.internalServerError(res, err);
+    }
+  };
+
+  getAllArchivedMessagesPaginated = async (req, res) => {
+    try {
+      const paginationNumber = req.params.paginationNumber;
+      const itemsPerPage = req.params.itemsPerPage;
+
+      return this.ok(
+        res,
+        await this.contactService.getAllArchivedMessagesPaginated(
           paginationNumber,
           itemsPerPage
         )

@@ -17,6 +17,7 @@ const CommentController = require("./controllers/comment-controller/CommentContr
 const BookLikeController = require("./controllers/book-like-controller/BookLikeController");
 const OrderController = require("./controllers/order-controller/OrderController");
 const BorrowController = require("./controllers/borrow-controller/BorrowController");
+const EventController = require("./controllers/event-controller/EventController");
 
 // const CommentLikeController = require("./controllers/comment-like-controller/CommentLikeController");
 
@@ -28,6 +29,7 @@ const CommentService = require("./services/comment-service/CommentService");
 const BookLikeService = require("./services/book-like-service/BookLikeService");
 const OrderService = require("./services/order-service/OrderService");
 const BorrowService = require("./services/borrow-service/BorrowService");
+const EventService = require("./services/event-service/EventService");
 
 // const CommentLikeService = require("./services/comment-like-service/CommentLikeService");
 
@@ -40,7 +42,8 @@ const app = new App(
     new CommentController(new CommentService()),
     new BookLikeController(new BookLikeService()),
     new OrderController(new OrderService()),
-    new BorrowController(new BorrowService())
+    new BorrowController(new BorrowService()),
+    new EventController(new EventService())
 
     // new CommentLikeController(new CommentLikeService())
   ],

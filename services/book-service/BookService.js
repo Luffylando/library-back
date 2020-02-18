@@ -12,6 +12,7 @@ class BookService {
     "genre",
     "quote",
     "status",
+    "archived",
     "borrowCount",
     "image"
   ];
@@ -20,11 +21,38 @@ class BookService {
     return await Books.query().select(...this.fields);
   }
 
+  async getAllUnarchivedBooks() {
+    const data = await Books.query()
+      .select(...this.fields)
+      .where({ archived: false });
+    data === undefined ? modelNotFoundError() : null;
+
+    return data;
+  }
+  async getAllArchivedBooks() {
+    const data = await Books.query()
+      .select(...this.fields)
+      .where({ archived: true });
+    data === undefined ? modelNotFoundError() : null;
+
+    return data;
+  }
+
   async getBookById(id) {
     const data = await Books.query()
       .select(...this.fields)
       .findById(id);
     data === undefined ? modelNotFoundError() : null;
+    return data;
+  }
+
+  async getAllHighlightedBooks() {
+    const data = await Books.query()
+      .select(...this.fields)
+      .where({ highlighted: true })
+      .limit(4);
+    data === undefined ? modelNotFoundError() : null;
+
     return data;
   }
 
@@ -40,10 +68,10 @@ class BookService {
       book
     };
   }
-  async editBook(id, author, title, genre, quote, image) {
+  async editBook(id, author, title, genre, quote, image, archived) {
     const data = await Books.query()
       .findById(id)
-      .patch({ author, title, genre, image, quote });
+      .patch({ author, title, genre, image, quote, archived });
     data === 0 ? modelNotFoundError() : null;
     return data;
   }

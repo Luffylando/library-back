@@ -17,7 +17,9 @@ class ContactService {
   ];
 
   async getAllContactMessages() {
-    return await Contacts.query().select(...this.fields);
+    return await Contacts.query()
+      .select(...this.fields)
+      .where({ archived: null, answered: null });
   }
 
   async getMessageById(id) {
@@ -79,13 +81,15 @@ class ContactService {
       .from("contacts")
       .limit(itemsPerPage)
       .offset(offset)
+      .where({ archived: null, answered: null })
       .orderBy("id", "desc");
   }
 
   async getAllAnsweredMessages() {
     return await Contacts.query()
       .select(...this.fields)
-      .where({ answered: true });
+      .where({ answered: true })
+      .andWhere({ archived: null });
   }
 
   async getAllAnsweredMessagesPaginated(paginationNumber = 1, itemsPerPage) {
@@ -102,7 +106,32 @@ class ContactService {
       .orderBy("id")
       .where({
         answered: true
-      });
+      })
+      .andWhere({ archived: null });
+  }
+  async getAllArchivedMessages() {
+    return await Contacts.query()
+      .select(...this.fields)
+      .where({ archived: true });
+  }
+
+  async getAllArchivedMessagesPaginated(paginationNumber = 1, itemsPerPage) {
+    let offset;
+
+    paginationNumber < 2
+      ? (offset = 0)
+      : (offset = (paginationNumber - 1) * itemsPerPage);
+    return await Contacts.query()
+      .select(...this.fields)
+      .from("contacts")
+      .limit(itemsPerPage)
+      .offset(offset)
+      .orderBy("id")
+      .where({
+        archived: true
+      })
+      .orWhere({ archived: true, answered: null })
+      .orWhere({ archived: true, answered: true });
   }
 }
 

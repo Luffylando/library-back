@@ -13,12 +13,15 @@ class BookLikeController extends BaseController {
 
   initializeRoutes() {
     this.router.get(`${this.path}/:book_id/:status`, this.getAllBookLikes);
+    this.router.get(`${this.path}/:book_id`, this.getByBookId);
+
     this.router.get(
       `${this.path}/check/:book_id/:user_id`,
       this.getBookLikesByUserId
     );
     this.router.post(`${this.path}/insert`, this.addLike);
     this.router.put(`${this.path}/update/:id`, this.updateLike);
+    this.router.delete(`${this.path}/delete/:book_id`, this.deleteByBookId);
   }
 
   getRoutes() {
@@ -33,6 +36,15 @@ class BookLikeController extends BaseController {
         res,
         await this.bookLikeService.getAllBookLikes(book_id, status)
       );
+    } catch (err) {
+      this.internalServerError(res, err);
+    }
+  };
+
+  getByBookId = async (req, res) => {
+    try {
+      const book_id = req.params.book_id;
+      return this.ok(res, await this.bookLikeService.getByBookId(book_id));
     } catch (err) {
       this.internalServerError(res, err);
     }
@@ -57,9 +69,12 @@ class BookLikeController extends BaseController {
   addLike = async (req, res) => {
     try {
       const { user_id, book_id, liked, created } = req.body;
-      let dataFromBody = { user_id, book_id, liked, created };
-
-      console.log("controlelr ", dataFromBody);
+      let dataFromBody = {
+        user_id: parseInt(user_id),
+        book_id: parseInt(book_id),
+        liked,
+        created
+      };
       const data = await this.bookLikeService.addLike(dataFromBody);
       this.created(res, data);
     } catch (err) {
@@ -82,18 +97,17 @@ class BookLikeController extends BaseController {
         : this.internalServerError(res, err);
     }
   };
+  deleteByBookId = async (req, res) => {
+    try {
+      const book_id = req.params.book_id;
+      const data = await this.bookLikeService.deleteByBookId(book_id);
+      this.ok(res, { delete: data });
+    } catch (err) {
+      err.name === "ModelNotFound"
+        ? this.notFound(res)
+        : this.internalServerError(res, err);
+    }
+  };
 }
-
-//   deleteBook = async (req,res) => {
-//     try {
-//       const id = req.params.id;
-//       const data = await this.bookService.deleteBook(id);
-//       this.ok(res, { delete: data });
-//     } catch (err) {
-//       err.name === "ModelNotFound"
-//         ? this.notFound(res)
-//         : this.internalServerError(res, err);
-//     }
-//     }
 
 module.exports = BookLikeController;

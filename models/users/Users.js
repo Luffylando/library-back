@@ -30,7 +30,7 @@ class Users extends Model {
         dob: { type: "string" },
         email: { type: "string", minLength: 1, maxLength: 100 },
         password: { type: "string", minLength: 1, maxLength: 255 },
-        image: { type: "string", minLength: 5 },
+        image: { type: "string", default: "" },
         gender: {
           type: "string",
           enum: ["Male", "Female"]

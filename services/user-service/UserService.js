@@ -48,7 +48,7 @@ class UserService {
       .where("email", "=", email);
   }
 
-  async createUser(firstName, lastName, dob, gender, email, password) {
+  async createUser(firstName, lastName, dob, gender, email, password, image) {
     emailValidator(email);
     const existingUser = await this.getUserByEmail(email);
     existingUser[0] !== undefined ? emailNotUnique() : null;
@@ -60,7 +60,8 @@ class UserService {
       gender,
       email,
       role: "guest",
-      password: hashedPassword
+      password: hashedPassword,
+      image
     });
 
     const mail = await mailer.sendVerificationEmail(

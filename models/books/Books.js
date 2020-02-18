@@ -15,8 +15,10 @@ class Books extends Model {
         author: { type: "string", minLength: 2, maxLength: 100 },
         quote: { type: "string", minLength: 2, maxLength: 100 },
         status: { type: "boolean", default: true },
+        highlighted: { type: "boolean", default: false },
         borrowCount: { type: "integer", default: 0 },
-        image: { type: "string", minLength: 5 },
+        image: { type: "string", minLength: 0, default: "" },
+        archived: { type: "boolean", default: false },
         genre: {
           type: "string",
           enum: ["Romance", "History", "Crime", "Philosophy", "Belatristics"]

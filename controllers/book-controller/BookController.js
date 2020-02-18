@@ -13,6 +13,9 @@ class BookController extends BaseController {
 
   initializeRoutes() {
     this.router.get(this.path, this.getAllBooks);
+    this.router.get(`${this.path}/unarchived`, this.getAllUnarchivedBooks);
+    this.router.get(`${this.path}/archived`, this.getAllArchivedBooks);
+    this.router.get(`${this.path}/highlighted`, this.getAllHighlightedBooks);
     this.router.get(`${this.path}/:id`, this.getBookById);
     this.router.post(`${this.path}/add`, this.addBook);
     this.router.put(`${this.path}/edit/:id`, this.editBook);
@@ -33,6 +36,30 @@ class BookController extends BaseController {
     }
   };
 
+  getAllUnarchivedBooks = async (req, res) => {
+    try {
+      return this.ok(res, await this.bookService.getAllUnarchivedBooks());
+    } catch (err) {
+      this.internalServerError(res, err);
+    }
+  };
+
+  getAllArchivedBooks = async (req, res) => {
+    try {
+      return this.ok(res, await this.bookService.getAllArchivedBooks());
+    } catch (err) {
+      this.internalServerError(res, err);
+    }
+  };
+
+  getAllHighlightedBooks = async (req, res) => {
+    try {
+      return this.ok(res, await this.bookService.getAllHighlightedBooks());
+    } catch (err) {
+      this.internalServerError(res, err);
+    }
+  };
+
   getBookById = async (req, res) => {
     try {
       const id = req.params.id;
@@ -46,7 +73,7 @@ class BookController extends BaseController {
 
   addBook = async (req, res) => {
     try {
-      const { author, title, genre, image } = req.body;
+      const { author, title, genre, quote, image } = req.body;
       let dataFromBody = { author, title, genre, quote, image };
       const data = await this.bookService.addBook(dataFromBody);
       this.created(res, data);
@@ -58,7 +85,7 @@ class BookController extends BaseController {
   };
 
   imgUpload = async (req, res) => {
-    if (req.files === null) {
+    if (req.files === null || req.files === undefined) {
       return res.status(400).json({ msg: "No file uploaded" });
     }
     const file = req.files.file;
@@ -90,14 +117,15 @@ class BookController extends BaseController {
   editBook = async (req, res) => {
     try {
       const id = req.params.id;
-      const { author, title, genre, quote, image } = req.body;
+      const { author, title, genre, quote, image, archived } = req.body;
       const data = await this.bookService.editBook(
         id,
         author,
         title,
         genre,
         quote,
-        image
+        image,
+        archived
       );
       this.ok(res, { updated: data });
     } catch (err) {

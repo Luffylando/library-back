@@ -30,6 +30,17 @@ exports.up = function(knex, Promise) {
       table.string("quote").notNullable();
       table.boolean("status", true).nullable();
       table
+        .boolean("archived", false)
+        .notNullable()
+        .default(false);
+      table
+        .boolean("highlighted", false)
+        .notNullable()
+        .default(false);
+
+      table;
+
+      table
         .integer("borrowCount")
         .unsigned()
         .notNullable()
@@ -140,6 +151,29 @@ exports.up = function(knex, Promise) {
         .foreign("user_id")
         .references("id")
         .inTable("users");
+    })
+    .createTable("events", table => {
+      table.increments("id").primary();
+      table.string("eventName", 100).notNullable();
+      table.string("eventDescription", 3000);
+      table.string("eventCreator", 200).notNullable();
+      table.string("eventImage", 200).nullable();
+      table.enu("eventStatus", ["comming", "finished"]).defaultTo("comming");
+      table
+        .boolean("highlighted", false)
+        .notNullable()
+        .default(false);
+
+      table
+        .datetime("eventDate", { precision: 6 })
+        .defaultTo(knex.fn.now(6))
+        .notNullable();
+      table
+        .datetime("eventCreated", { precision: 6 })
+        .defaultTo(knex.fn.now(6));
+      table
+        .datetime("eventUpdated", { precision: 6 })
+        .defaultTo(knex.fn.now(6));
     });
   // .createTable("comments_likes", table => {
   //   table.increments("id").primary();

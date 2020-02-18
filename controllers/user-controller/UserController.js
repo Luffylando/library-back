@@ -56,14 +56,23 @@ class UserController extends BaseController {
 
   createUser = async (req, res) => {
     try {
-      const { firstName, lastName, dob, gender, email, password } = req.body;
+      const {
+        firstName,
+        lastName,
+        dob,
+        gender,
+        email,
+        password,
+        image
+      } = req.body;
       const data = await this.userService.createUser(
         firstName,
         lastName,
         dob,
         gender,
         email,
-        password
+        password,
+        image
       );
       this.created(res, data);
     } catch (err) {
@@ -199,11 +208,7 @@ class UserController extends BaseController {
   changePassword = async (req, res) => {
     try {
       const { id, oldPassword, newPassword } = req.body;
-      const data = await this.userService.changePassword(
-        id,
-        oldPassword,
-        newPassword
-      );
+      const data = await this.userService.changePassword(id, oldPassword);
 
       console.log("data", data);
       this.ok(res, data);

@@ -208,9 +208,12 @@ class UserController extends BaseController {
   changePassword = async (req, res) => {
     try {
       const { id, oldPassword, newPassword } = req.body;
-      const data = await this.userService.changePassword(id, oldPassword);
+      const data = await this.userService.changePassword(
+        id,
+        oldPassword,
+        newPassword
+      );
 
-      console.log("data", data);
       this.ok(res, data);
     } catch (err) {
       err.name === "ModelNotFound"

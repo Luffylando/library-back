@@ -19,7 +19,7 @@ class ContactService {
   async getAllContactMessages() {
     return await Contacts.query()
       .select(...this.fields)
-      .where({ archived: null, answered: null });
+      .where({ archived: false, answered: false });
   }
 
   async getMessageById(id) {
@@ -81,7 +81,7 @@ class ContactService {
       .from("contacts")
       .limit(itemsPerPage)
       .offset(offset)
-      .where({ archived: null, answered: null })
+      .where({ archived: false, answered: false })
       .orderBy("id", "desc");
   }
 
@@ -89,7 +89,7 @@ class ContactService {
     return await Contacts.query()
       .select(...this.fields)
       .where({ answered: true })
-      .andWhere({ archived: null });
+      .andWhere({ archived: false });
   }
 
   async getAllAnsweredMessagesPaginated(paginationNumber = 1, itemsPerPage) {
@@ -107,7 +107,7 @@ class ContactService {
       .where({
         answered: true
       })
-      .andWhere({ archived: null });
+      .andWhere({ archived: false });
   }
   async getAllArchivedMessages() {
     return await Contacts.query()
@@ -130,7 +130,7 @@ class ContactService {
       .where({
         archived: true
       })
-      .orWhere({ archived: true, answered: null })
+      .orWhere({ archived: true, answered: false })
       .orWhere({ archived: true, answered: true });
   }
 }

@@ -23,6 +23,8 @@ class Events extends Model {
           enum: ["comming", "finished"],
           default: "comming"
         },
+        interestedCount: { type: "integer", default: 0 },
+
         highlighted: { type: "boolean", default: false },
         eventImage: { type: "string", minLength: 0, default: "" },
 

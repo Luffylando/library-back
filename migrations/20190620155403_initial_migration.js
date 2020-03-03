@@ -28,15 +28,18 @@ exports.up = function(knex, Promise) {
       table.string("author", 100).notNullable();
       table.string("genre", 40).notNullable();
       table.string("quote").notNullable();
-      table.boolean("status", true).nullable();
       table
-        .boolean("archived", false)
-        .notNullable()
-        .default(false);
+        .boolean("status")
+        .default(1)
+        .notNullable();
       table
-        .boolean("highlighted", false)
-        .notNullable()
-        .default(false);
+        .boolean("archived")
+        .default(0)
+        .notNullable();
+      table
+        .boolean("highlighted")
+        .default(0)
+        .notNullable();
 
       table;
 
@@ -51,13 +54,16 @@ exports.up = function(knex, Promise) {
       table.increments("id").primary();
       table.string("firstName", 100).notNullable();
       table.string("lastName", 100).notNullable();
-      table
-        .string("email", 100)
-        .unique()
-        .notNullable();
+      table.string("email", 100).notNullable();
       table.string("message", 3000).notNullable();
-      table.boolean("answered", false).nullable();
-      table.boolean("archived", false).nullable();
+      table
+        .boolean("answered")
+        .default(0)
+        .notNullable();
+      table
+        .boolean("archived")
+        .default(0)
+        .notNullable();
 
       table.date("reciveDate").notNullable();
     })
@@ -159,10 +165,12 @@ exports.up = function(knex, Promise) {
       table.string("eventCreator", 200).notNullable();
       table.string("eventImage", 200).nullable();
       table.enu("eventStatus", ["comming", "finished"]).defaultTo("comming");
+      table.boolean("highlighted").notNullable();
       table
-        .boolean("highlighted", false)
+        .integer("interestedCount")
+        .unsigned()
         .notNullable()
-        .default(false);
+        .default(0);
 
       table
         .datetime("eventDate", { precision: 6 })
@@ -174,6 +182,27 @@ exports.up = function(knex, Promise) {
       table
         .datetime("eventUpdated", { precision: 6 })
         .defaultTo(knex.fn.now(6));
+    })
+    .createTable("events_interested", table => {
+      table.increments("id").primary();
+      table
+        .integer("user_id")
+        .unsigned()
+        .notNullable();
+      table
+        .integer("event_id")
+        .unsigned()
+        .notNullable();
+      table.enu("interested", ["interested", "neutral"]).defaultTo("neutral");
+      table.datetime("created", { precision: 6 }).defaultTo(knex.fn.now(6));
+      table
+        .foreign("event_id")
+        .references("id")
+        .inTable("events");
+      table
+        .foreign("user_id")
+        .references("id")
+        .inTable("users");
     });
   // .createTable("comments_likes", table => {
   //   table.increments("id").primary();

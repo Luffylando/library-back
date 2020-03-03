@@ -14,6 +14,7 @@ class EventService {
     "eventStatus",
     "eventImage",
     "highlighted",
+    "interestedCount",
     "eventCreated",
     "eventUpdated"
   ];
@@ -87,6 +88,14 @@ class EventService {
     data === 0 ? modelNotFoundError() : null;
     return data;
   }
+
+  // async interestedCount(id) {
+  //   const data = await Events.query()
+  //     .findById(id)
+  //     .del();
+  //   data === 0 ? modelNotFoundError() : null;
+  //   return data;
+  // }
 }
 
 module.exports = EventService;

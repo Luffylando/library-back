@@ -73,8 +73,8 @@ class BookController extends BaseController {
 
   addBook = async (req, res) => {
     try {
-      const { author, title, genre, quote, image } = req.body;
-      let dataFromBody = { author, title, genre, quote, image };
+      const { author, title, genre, quote, image, highlighted } = req.body;
+      let dataFromBody = { author, title, genre, quote, image, highlighted };
       const data = await this.bookService.addBook(dataFromBody);
       this.created(res, data);
     } catch (err) {
@@ -117,7 +117,15 @@ class BookController extends BaseController {
   editBook = async (req, res) => {
     try {
       const id = req.params.id;
-      const { author, title, genre, quote, image, archived } = req.body;
+      const {
+        author,
+        title,
+        genre,
+        quote,
+        image,
+        archived,
+        highlighted
+      } = req.body;
       const data = await this.bookService.editBook(
         id,
         author,
@@ -125,7 +133,8 @@ class BookController extends BaseController {
         genre,
         quote,
         image,
-        archived
+        archived,
+        highlighted
       );
       this.ok(res, { updated: data });
     } catch (err) {

@@ -59,14 +59,16 @@ class EventController extends BaseController {
         eventDescription,
         eventDate,
         eventCreator,
-        eventImage
+        eventImage,
+        highlighted
       } = req.body;
       let dataFromBody = {
         eventName,
         eventDescription,
         eventDate,
         eventCreator,
-        eventImage
+        eventImage,
+        highlighted
       };
       const data = await this.eventService.addEvent(dataFromBody);
       this.created(res, data);
@@ -116,7 +118,8 @@ class EventController extends BaseController {
         eventCreator,
         eventDate,
         eventUpdated,
-        eventImage
+        eventImage,
+        highlighted
       } = req.body;
       const data = await this.eventService.editEvent(
         id,
@@ -125,7 +128,8 @@ class EventController extends BaseController {
         eventCreator,
         eventDate,
         eventUpdated,
-        eventImage
+        eventImage,
+        highlighted
       );
       this.ok(res, { updated: data });
     } catch (err) {

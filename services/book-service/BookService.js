@@ -13,6 +13,7 @@ class BookService {
     "quote",
     "status",
     "archived",
+    "highlighted",
     "borrowCount",
     "image"
   ];
@@ -62,16 +63,26 @@ class BookService {
       title: data.title,
       genre: data.genre,
       quote: data.quote,
+      highlighted: data.highlighted,
       image: data.image
     });
     return {
       book
     };
   }
-  async editBook(id, author, title, genre, quote, image, archived) {
+  async editBook(
+    id,
+    author,
+    title,
+    genre,
+    quote,
+    image,
+    archived,
+    highlighted
+  ) {
     const data = await Books.query()
       .findById(id)
-      .patch({ author, title, genre, image, quote, archived });
+      .patch({ author, title, genre, image, quote, archived, highlighted });
     data === 0 ? modelNotFoundError() : null;
     return data;
   }

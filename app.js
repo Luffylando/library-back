@@ -1,6 +1,6 @@
 const App = require("./server/boot");
-const HOST = "http://localhost";
-const PORT = 4000;
+const HOST = "https://tours-backend.herokuapp.com" || "http://localhost";
+const PORT = process.env.PORT || 4000;
 
 //Bootstrap Objection
 

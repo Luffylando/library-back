@@ -25,7 +25,8 @@ class FrontPageController extends BaseController {
     this.ok(res, {
       uptime: process.uptime(),
       message: "Library Backend Online!",
-      status: this.OK
+      status: this.OK,
+      test: res
     });
   };
 

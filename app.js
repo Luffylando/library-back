@@ -1,6 +1,6 @@
 const App = require("./server/boot");
-const HOST = "https://library-back-od.herokuapp.com" || "http://localhost";
-const PORT = process.env.PORT || 4000;
+const HOST = "https://library-back-od.herokuapp.com";
+const PORT = process.env.PORT;
 
 // const HOST = "localhost";
 // const PORT = 4000;

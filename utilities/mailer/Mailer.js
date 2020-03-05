@@ -3,7 +3,7 @@ const mailConfig = require("./config/auth");
 const transporter = nodemailer.createTransport(mailConfig);
 const verificationTemplate = require("./templates/verificationTemplate");
 const resetTemplate = require("./templates/resetTemplate");
-const clientUrl = process.env.CLIENT_URL || "http://localhost:3000";
+// const clientUrl = process.env.CLIENT_URL || "http://localhost:3000";
 
 class Mailer {
   async sendContactUsMessage(data) {

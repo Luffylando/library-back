@@ -8,9 +8,7 @@ class FrontPageController extends BaseController {
   constructor() {
     super();
     this.path = "/";
-    console.log("this.path", this.path);
     this.router = express.Router();
-    console.log("this.router", this.router);
 
     this.initializeRoutes();
   }
@@ -28,7 +26,8 @@ class FrontPageController extends BaseController {
     this.ok(res, {
       uptime: process.uptime(),
       message: "Library Backend Online!",
-      status: this.OK
+      status: this.OK,
+      test: "Testing  2 3 4"
     });
   };
 

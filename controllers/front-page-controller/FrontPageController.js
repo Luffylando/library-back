@@ -8,7 +8,10 @@ class FrontPageController extends BaseController {
   constructor() {
     super();
     this.path = "/";
+    console.log("this.path", this.path);
     this.router = express.Router();
+    console.log("this.router", this.router);
+
     this.initializeRoutes();
   }
 

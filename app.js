@@ -1,9 +1,9 @@
 const App = require("./server/boot");
-const HOST = "https://library-back-od.herokuapp.com";
-const PORT = process.env.PORT;
+// const HOST = "https://library-back-od.herokuapp.com";
+// const PORT = process.env.PORT;
 
-// const HOST = "localhost";
-// const PORT = 4000;
+const HOST = "localhost";
+const PORT = 4000;
 
 //Bootstrap Objection
 

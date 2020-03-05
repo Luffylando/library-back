@@ -1,0 +1,70 @@
+Arguments: 
+  /usr/local/bin/node /usr/share/yarn/bin/yarn.js
+
+PATH: 
+  /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+
+Yarn version: 
+  1.21.1
+
+Node version: 
+  12.14.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/base64url: tunneling socket could not be established, cause=Hostname/IP does not match certificate's altnames: Host: registry.yarnpkg.com. is not in the cert's altnames: DNS:*.herokuapp.com, DNS:herokuapp.com
+      at ClientRequest.onError (/usr/share/yarn/lib/cli.js:152151:17)
+      at Object.onceWrapper (events.js:300:26)
+      at ClientRequest.emit (events.js:210:5)
+      at TLSSocket.socketErrorListener (_http_client.js:406:9)
+      at TLSSocket.emit (events.js:210:5)
+      at emitErrorNT (internal/streams/destroy.js:92:8)
+      at emitErrorAndCloseNT (internal/streams/destroy.js:60:3)
+      at processTicksAndRejections (internal/process/task_queues.js:80:21)
+
+npm manifest: 
+  {
+    "name": "back",
+    "version": "1.0.0",
+    "description": "(Projec for CV)",
+    "main": "app.js",
+    "dependencies": {
+      "base64url": "^3.0.1",
+      "bcrypt": "^3.0.7",
+      "cookie-parser": "^1.4.4",
+      "cors": "^2.8.5",
+      "crypto": "^1.0.1",
+      "dotenv": "^8.2.0",
+      "email-validator": "^2.0.4",
+      "express": "^4.17.1",
+      "express-fileupload": "^1.1.6",
+      "jsonwebtoken": "^8.5.1",
+      "jw-paginate": "^1.0.4",
+      "knex": "^0.20.3",
+      "nodemailer": "^6.3.0",
+      "objection": "^1.6.9"
+    },
+    "devDependencies": {},
+    "scripts": {
+      "start": "knex migrate:latest && knex seed:run && node app.js",
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "seed": "knex seed:run",
+      "migrate": "knex migrate:latest"
+    },
+    "keywords": [
+      "Node",
+      "Library",
+      "Mysql",
+      "Backend"
+    ],
+    "author": "Auguste Dupin",
+    "license": "ISC"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
